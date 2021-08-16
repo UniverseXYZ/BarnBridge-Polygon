@@ -5,7 +5,6 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import "./interfaces/ISmartYieldProvider.sol";
 import "./matic/IRootChainManager.sol";
 import "./matic/IERC20ChildToken.sol";
 
@@ -147,18 +146,5 @@ contract PolygonTokenHarvester is OwnableUpgradeable {
 
         emit WithdrawOnChild(_msgSender(), _childToken, amount);
         erc20.withdraw(amount);
-    }
-
-    /// @notice Transfer fees from SmartYield and withdraw them from the child chain
-    /// @dev Helper that transfer fees from a SmartYield deployment as underlaying token.
-    /// @param _syProvider SmartYield deployment address
-    function claimAndWithdrawOnChild(address _syProvider) public onlyOnChild {
-        require(_syProvider != address(0), "Harvester: sy provider address must not be 0x0");
-
-        ISmartYieldProvider provider = ISmartYieldProvider(_syProvider);
-        address underlying = provider.uToken();
-
-        provider.transferFees();
-        withdrawOnChild(underlying);
     }
 }

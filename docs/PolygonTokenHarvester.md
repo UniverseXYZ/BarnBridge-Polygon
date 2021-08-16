@@ -20,7 +20,6 @@ Assists with moving any given token from the child chain to the root chain. Made
   - [transferToOwner](#transfertoowner)
   - [withdrawAndTransferToOwner](#withdrawandtransfertoowner)
   - [withdrawOnChild](#withdrawonchild)
-  - [claimAndWithdrawOnChild](#claimandwithdrawonchild)
 - [Events](#events)
   - [TransferToOwner](#transfertoowner)
   - [WithdrawOnRoot](#withdrawonroot)
@@ -212,29 +211,6 @@ Withdraws full token balance from the child chain
 | Arg | Type | Description |
 | --- | --- | --- |
 |`_childToken` | address | Address of token to withdraw
-
-### claimAndWithdrawOnChild
-Transfer fees from SmartYield and withdraw them from the child chain
-
-> Helper that transfer fees from a SmartYield deployment as underlaying token.
-
-
-#### Declaration
-```solidity
-  function claimAndWithdrawOnChild(
-    address _syProvider
-  ) public onlyOnChild
-```
-
-#### Modifiers:
-| Modifier |
-| --- |
-| onlyOnChild |
-
-#### Args:
-| Arg | Type | Description |
-| --- | --- | --- |
-|`_syProvider` | address | SmartYield deployment address
 
 
 

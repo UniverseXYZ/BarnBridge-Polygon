@@ -26,8 +26,6 @@ const setup = deployments.createFixture(async ({
     MockRootChainManager: (await ethers.getContract("MockRootChainManager")),
     ChildMockERC20MOK: (await ethers.getContract("ChildMockERC20MOK")),
     ChildMockERC20MCK: (await ethers.getContract("ChildMockERC20MCK")),
-    ChildMockSmartYieldProviderMOK: (await ethers.getContract("ChildMockSmartYieldProviderMOK")),
-    ChildMockSmartYieldProviderMCK: (await ethers.getContract("ChildMockSmartYieldProviderMCK"))
   };
 
   // These object allow you to write things like `users[0].Token.transfer(....)`
@@ -146,10 +144,6 @@ describe("Harvester Root Chain Tests", () => {
       await expect(users[0].RootHarvester.withdrawOnChild(Token.address)).to.be.revertedWith(
         "Harvester: should only be called on child chain"
       );
-
-      await expect(users[0].RootHarvester.claimAndWithdrawOnChild(Token.address)).to.be.revertedWith(
-        "Harvester: should only be called on child chain"
-      );
     });
   });
 });
@@ -224,40 +218,6 @@ describe("Child Chain Tests", () => {
 
       expect(await ChildMockERC20MOK.balanceOf(ChildHarvester.address))
         .to.equal(0);
-    });
-
-    it("claimAndWithdrawOnChild", async function () {
-      const {
-        ChildHarvester, ChildMockERC20MOK, ChildMockERC20MCK,
-        ChildMockSmartYieldProviderMOK, ChildMockSmartYieldProviderMCK,
-        users
-      } = await setup();
-
-      // add some tokens to smart yields
-      const amountMOK = "1000000000000000000001";
-      const amountMCK = "2000000000000000000002";
-      // MOK
-      await ChildMockERC20MOK.mint(ChildMockSmartYieldProviderMOK.address, amountMOK);
-      expect(await ChildMockERC20MOK.balanceOf(ChildMockSmartYieldProviderMOK.address))
-        .to.equal(amountMOK);
-      //MCK
-      await ChildMockERC20MCK.mint(ChildMockSmartYieldProviderMCK.address, amountMCK);
-      expect(await ChildMockERC20MCK.balanceOf(ChildMockSmartYieldProviderMCK.address))
-        .to.equal(amountMCK);
-
-      // claim and withdraw
-      await expect(users[0].ChildHarvester.claimAndWithdrawOnChild(ChildMockSmartYieldProviderMOK.address))
-        .to.emit(ChildHarvester, "WithdrawOnChild")
-        .withArgs(users[0].address, ChildMockERC20MOK.address, amountMOK);
-
-      await expect(users[0].ChildHarvester.claimAndWithdrawOnChild(ChildMockSmartYieldProviderMCK.address))
-        .to.emit(ChildHarvester, "WithdrawOnChild")
-        .withArgs(users[0].address, ChildMockERC20MCK.address, amountMCK);
-
-      expect(await ChildMockERC20MOK.balanceOf(ChildMockSmartYieldProviderMOK.address))
-        .to.equal("0");
-      expect(await ChildMockERC20MCK.balanceOf(ChildMockSmartYieldProviderMOK.address))
-        .to.equal("0");
     });
   });
 
