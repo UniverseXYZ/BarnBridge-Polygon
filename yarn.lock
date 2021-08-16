@@ -510,7 +510,7 @@
     "@ethersproject/properties" "^5.4.0"
     "@ethersproject/strings" "^5.4.0"
 
-"@maticnetwork/maticjs@^2.0.40":
+"@maticnetwork/maticjs@^2.0.45":
   version "2.0.45"
   resolved "https://registry.yarnpkg.com/@maticnetwork/maticjs/-/maticjs-2.0.45.tgz#d0d88a526ca9c1331e211bb7647eece09326ccfe"
   integrity sha512-2B7lUvvf78lKeg55xQR8em6dmjJJ8mHDuxWlxHwwc9EmIBlRkv5O4dbrLYJjYtz6EvRhR9o/3fUH5vWzCv0T5Q==
