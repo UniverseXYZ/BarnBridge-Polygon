@@ -12,7 +12,7 @@ task("send-usdc-from-sy-to-goerli", "Sends bond to smart yield provider then cla
     }
     const cfg = config(hre);
     const {owner} = await getNamedAccounts();
-    const Bond = (await ethers.getContractAt("ERC20Mock", cfg.bondAddress, owner));
+    const Bond = (await ethers.getContractAt("ERC20Mock", cfg.tokenAddress, owner));
     const ChildVault = (await ethers.getContract("PolygonCommunityVault"));
     const Harvester = (await ethers.getContract("PolygonTokenHarvester"));
     const SYProvider = (await ethers.getContractAt("ISmartYieldProvider", "0x63fD30ed07c91B7b27Da5c828c7eB752F7e4676b"));

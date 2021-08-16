@@ -26,7 +26,7 @@ const config: HardhatUserConfig = {
       deploy: ["deploy/common", "deploy/testnet"],
       forking: {
         url: node_url("goerli"),
-        blockNumber: 4823788
+        blockNumber: 5331479
       },
       companionNetworks: {
         l1: "hardhat"

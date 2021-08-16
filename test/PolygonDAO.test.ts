@@ -21,7 +21,7 @@ const setup = deployments.createFixture(async ({
   const contracts = {
     RootDAO: (await ethers.getContract("PolygonDAORoot")),
     ChildDAO: (await ethers.getContract("PolygonDAOChildTest")),
-    Bond: (await ethers.getContractAt("IERC20", cfg.bondAddress, owner)),
+    Token: (await ethers.getContractAt("IERC20", cfg.tokenAddress, owner)),
     ChildMockERC20MOK: (await ethers.getContract("ChildMockERC20MOK")),
     StateSender: (await ethers.getContractAt("IStateSender", cfg.stateSender, owner))
   };
@@ -45,9 +45,9 @@ const setup = deployments.createFixture(async ({
 describe("Polygon DAO Root Chain Tests", () => {
   describe("Initialization tests", () => {
     it("Deployment should succeed and sane options should be set", async function () {
-      const {Bond, RootDAO, owner} = await setup();
+      const {Token, RootDAO, owner} = await setup();
 
-      expect(await Bond.balanceOf(RootDAO.address))
+      expect(await Token.balanceOf(RootDAO.address))
         .to.equal("0");
 
       expect(await RootDAO.owner()).to.be.equal(owner.address);
@@ -62,7 +62,7 @@ describe("Polygon DAO Root Chain Tests", () => {
       await expect(users[0].RootDAO.transferOwnership(users[0].address))
         .to.be.revertedWith("Ownable: caller is not the owner");
     });
-    
+
     it("Should transfer payload to bridge and execute it", async function () {
       const {RootDAO, ChildDAO, ChildMockERC20MOK, StateSender, owner, users} = await setup();
 

@@ -21,7 +21,7 @@ const setup = deployments.createFixture(async ({
   const contracts = {
     RootVault: (await ethers.getContract("PolygonCommunityVault")),
     ChildVault: (await ethers.getContract("ChildPolygonCommunityVault")),
-    Bond: (await ethers.getContractAt("IERC20", cfg.bondAddress, owner)),
+    Token: (await ethers.getContractAt("IERC20", cfg.tokenAddress, owner)),
     ERC20Predicate: (await ethers.getContractAt("IERC20Predicate", cfg.erc20Predicate, owner)),
     StateSender: (await ethers.getContractAt("IStateSender", cfg.stateSender, owner))
   };
@@ -30,9 +30,9 @@ const setup = deployments.createFixture(async ({
   const users = await setupUsers(await getUnnamedAccounts(), contracts);
 
   // TODO get the proper interface and use mint instead of transfer
-  await contracts.Bond.transfer(contracts.RootVault.address, "1000000000000000000000").then((tx: { wait: () => any; }) => tx.wait());
+  await contracts.Token.transfer(contracts.RootVault.address, "1000000000000000000000").then((tx: { wait: () => any; }) => tx.wait());
 
-  await contracts.Bond.transfer(contracts.ChildVault.address, "1000000000000000000000").then((tx: { wait: () => any; }) => tx.wait());
+  await contracts.Token.transfer(contracts.ChildVault.address, "1000000000000000000000").then((tx: { wait: () => any; }) => tx.wait());
 
   return {
     ...contracts,
@@ -43,13 +43,13 @@ const setup = deployments.createFixture(async ({
 
 describe("Vault Root Chain Tests", () => {
   describe("Initialization Tests", () => {
-    it("Deployment should succeed and 1000 BOND should be in vault", async function () {
-      const {Bond, RootVault} = await setup();
+    it("Deployment should succeed and 1000 tokens should be in vault", async function () {
+      const {Token, RootVault} = await setup();
 
-      expect(await Bond.balanceOf(RootVault.address))
+      expect(await Token.balanceOf(RootVault.address))
         .to.equal("1000000000000000000000");
 
-      expect(await RootVault.token()).to.equal(Bond.address);
+      expect(await RootVault.token()).to.equal(Token.address);
     });
   });
 
@@ -92,40 +92,40 @@ describe("Vault Root Chain Tests", () => {
   });
 
   describe("transferToChild tests", () => {
-    it("Should transfer all BOND to Child Chain as owner", async function () {
-      const {Bond, RootVault, ERC20Predicate, StateSender, owner} = await setup();
+    it("Should transfer all tokens to Child Chain as owner", async function () {
+      const {Token, RootVault, ERC20Predicate, StateSender, owner} = await setup();
       const value = "1000000000000000000000";
 
-      expect(await Bond.balanceOf(RootVault.address))
+      expect(await Token.balanceOf(RootVault.address))
         .to.equal(value);
 
       await expect(owner.RootVault.transferToChild())
-        .to.emit(Bond, "Approval")
-        .to.emit(ERC20Predicate, "LockedERC20").withArgs(RootVault.address, RootVault.address, Bond.address, value)
-        .to.emit(Bond, "Transfer").withArgs(RootVault.address, ERC20Predicate.address, value)
+        .to.emit(Token, "Approval")
+        .to.emit(ERC20Predicate, "LockedERC20").withArgs(RootVault.address, RootVault.address, Token.address, value)
+        .to.emit(Token, "Transfer").withArgs(RootVault.address, ERC20Predicate.address, value)
         .to.emit(StateSender, "StateSynced")
-        .to.emit(RootVault, "TransferToChild").withArgs(owner.address, Bond.address, value);
+        .to.emit(RootVault, "TransferToChild").withArgs(owner.address, Token.address, value);
 
-      expect(await Bond.balanceOf(RootVault.address))
+      expect(await Token.balanceOf(RootVault.address))
         .to.equal("0");
 
     });
 
-    it("Should transfer all BOND to Child as anyone", async function () {
-      const {Bond, RootVault, ERC20Predicate, StateSender, users} = await setup();
+    it("Should transfer all tokens to Child as anyone", async function () {
+      const {Token, RootVault, ERC20Predicate, StateSender, users} = await setup();
       const value = "1000000000000000000000";
 
-      expect(await Bond.balanceOf(RootVault.address))
+      expect(await Token.balanceOf(RootVault.address))
         .to.equal(value);
 
       await expect(users[0].RootVault.transferToChild())
-        .to.emit(Bond, "Approval")
-        .to.emit(ERC20Predicate, "LockedERC20").withArgs(RootVault.address, RootVault.address, Bond.address, value)
-        .to.emit(Bond, "Transfer").withArgs(RootVault.address, ERC20Predicate.address, value)
+        .to.emit(Token, "Approval")
+        .to.emit(ERC20Predicate, "LockedERC20").withArgs(RootVault.address, RootVault.address, Token.address, value)
+        .to.emit(Token, "Transfer").withArgs(RootVault.address, ERC20Predicate.address, value)
         .to.emit(StateSender, "StateSynced")
-        .to.emit(RootVault, "TransferToChild").withArgs(users[0].address, Bond.address, value);
+        .to.emit(RootVault, "TransferToChild").withArgs(users[0].address, Token.address, value);
 
-      expect(await Bond.balanceOf(RootVault.address))
+      expect(await Token.balanceOf(RootVault.address))
         .to.equal("0");
 
     });
@@ -134,10 +134,10 @@ describe("Vault Root Chain Tests", () => {
 
 describe("Vault Child Chain tests", () => {
   describe("Initialization tests", () => {
-    it("Deployment should succeed and 1000 BOND should be in vault", async function () {
-      const {Bond, ChildVault} = await setup();
+    it("Deployment should succeed and 1000 tokens should be in vault", async function () {
+      const {Token, ChildVault} = await setup();
 
-      const vaultBalance = await Bond.balanceOf(ChildVault.address);
+      const vaultBalance = await Token.balanceOf(ChildVault.address);
 
       expect(vaultBalance)
         .to.equal("1000000000000000000000");
@@ -176,16 +176,16 @@ describe("Vault Child Chain tests", () => {
 
   describe("Transfer to Child Chain Tests", () => {
     it("transferToChild should revert", async function () {
-      const {Bond, ChildVault, owner} = await setup();
+      const {Token, ChildVault, owner} = await setup();
       const value = "1000000000000000000000";
 
-      expect(await Bond.balanceOf(ChildVault.address))
+      expect(await Token.balanceOf(ChildVault.address))
         .to.equal(value);
 
       await expect(owner.ChildVault.transferToChild())
         .to.be.revertedWith("Vault: transfer to child chain is disabled");
 
-      expect(await Bond.balanceOf(ChildVault.address))
+      expect(await Token.balanceOf(ChildVault.address))
         .to.equal(value);
 
     });

@@ -8,7 +8,7 @@ interface BBPolyConfig {
 interface BBNetConfig {
   path: string,
   seed: string,
-  bondAddress: string,
+  tokenAddress: string,
   rootChainManager: string,
   erc20Predicate: string,
   stateSender: string,
@@ -26,7 +26,7 @@ export function config(hre: HardhatRuntimeEnvironment): BBNetConfig {
     "hardhat": {
       path: "deploy-testnet",
       seed: "dev06",
-      bondAddress: "0xd7d55Fd7763A356aF99f17C9d6c21d933bC2e2F1",
+      tokenAddress: "0xd7d55Fd7763A356aF99f17C9d6c21d933bC2e2F1",
       rootChainManager: "0xBbD7cBFA79faee899Eaf900F13C9065bF03B1A74",
       erc20Predicate: "0xdD6596F2029e6233DEFfaCa316e6A95217d4Dc34",
       checkpointManger: "0x2890bA17EfE978480615e330ecB65333b880928e",
@@ -41,7 +41,7 @@ export function config(hre: HardhatRuntimeEnvironment): BBNetConfig {
     "goerli": {
       path: "deploy-goerli",
       seed: "dev06",
-      bondAddress: "0xd7d55Fd7763A356aF99f17C9d6c21d933bC2e2F1",
+      tokenAddress: "0xd7d55Fd7763A356aF99f17C9d6c21d933bC2e2F1",
       rootChainManager: "0xBbD7cBFA79faee899Eaf900F13C9065bF03B1A74",
       erc20Predicate: "0xdD6596F2029e6233DEFfaCa316e6A95217d4Dc34",
       stateSender: "0xEAa852323826C71cd7920C3b4c007184234c3945",
@@ -54,7 +54,7 @@ export function config(hre: HardhatRuntimeEnvironment): BBNetConfig {
     "mumbai": {
       path: "deploy-mumbai",
       seed: "dev06",
-      bondAddress: "0xebB83c1b86A27eb9e2523A2c117F1d656269dbAE",
+      tokenAddress: "0xebB83c1b86A27eb9e2523A2c117F1d656269dbAE",
       rootChainManager: addressZero,
       erc20Predicate: addressZero,
       stateSender: addressZero,
@@ -67,7 +67,7 @@ export function config(hre: HardhatRuntimeEnvironment): BBNetConfig {
     "mainnet": {
       path: "deploy-mainnet",
       seed: "prod01",
-      bondAddress: "0x0391d2021f89dc339f60fff84546ea23e337750f",
+      tokenAddress: "0x0391d2021f89dc339f60fff84546ea23e337750f",
       rootChainManager: "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
       erc20Predicate: "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
       stateSender: "0x28e4F3a7f651294B9564800b2D01f35189A5bFbE",
@@ -80,7 +80,7 @@ export function config(hre: HardhatRuntimeEnvironment): BBNetConfig {
     "matic": {
       path: "deploy-matic",
       seed: "prod01",
-      bondAddress: "0xA041544fe2BE56CCe31Ebb69102B965E06aacE80",
+      tokenAddress: "0xA041544fe2BE56CCe31Ebb69102B965E06aacE80",
       rootChainManager: addressZero,
       erc20Predicate: addressZero,
       stateSender: addressZero,

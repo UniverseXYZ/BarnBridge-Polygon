@@ -12,7 +12,7 @@ task("send-bond-to-goerli", "Sends bond to goerli from mumbai")
         }
         const cfg = config(hre);
         const { owner } = await getNamedAccounts();
-        const Bond = (await ethers.getContractAt("ERC20Mock", cfg.bondAddress, owner));
+        const Bond = (await ethers.getContractAt("ERC20Mock", cfg.tokenAddress, owner));
         const ChildVault = (await ethers.getContract("PolygonCommunityVault"));
         const Harvester = (await ethers.getContract("PolygonTokenHarvester"));
 

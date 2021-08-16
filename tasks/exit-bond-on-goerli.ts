@@ -30,7 +30,7 @@ task("exit-bond-on-goerli", "Sends bond to mumbai from goerli")
         let tx = await Harvester.withdrawOnRoot(exitCalldata.data, { gasLimit: 1000000 });
         console.log(`https://goerli.etherscan.io/tx/${tx.hash}`)
 
-        tx = await Harvester.transferToOwner(cfg.bondAddress, { gasLimit: 500000 });
+        tx = await Harvester.transferToOwner(cfg.tokenAddress, { gasLimit: 500000 });
         console.log(`https://goerli.etherscan.io/tx/${tx.hash}`)
 
     });

@@ -22,7 +22,7 @@ const setup = deployments.createFixture(async ({
   const contracts = {
     RootHarvester: (await ethers.getContract("RootPolygonTokenHarvesterTest")),
     ChildHarvester: (await ethers.getContract("ChildPolygonTokenHarvesterTest")),
-    Bond: (await ethers.getContractAt("IERC20", cfg.bondAddress, owner)),
+    Token: (await ethers.getContractAt("IERC20", cfg.tokenAddress, owner)),
     MockRootChainManager: (await ethers.getContract("MockRootChainManager")),
     ChildMockERC20MOK: (await ethers.getContract("ChildMockERC20MOK")),
     ChildMockERC20MCK: (await ethers.getContract("ChildMockERC20MCK")),
@@ -44,9 +44,9 @@ const setup = deployments.createFixture(async ({
 describe("Harvester Root Chain Tests", () => {
   describe("Initialization tests", () => {
     it("Deployment should succeed and sane options should be set", async function () {
-      const {Bond, RootHarvester, MockRootChainManager, owner} = await setup();
+      const {Token, RootHarvester, MockRootChainManager, owner} = await setup();
 
-      expect(await Bond.balanceOf(RootHarvester.address))
+      expect(await Token.balanceOf(RootHarvester.address))
         .to.equal("0");
 
       expect(await RootHarvester.owner()).to.be.equal(owner.address);
@@ -77,77 +77,77 @@ describe("Harvester Root Chain Tests", () => {
 
   describe("Root Chain Token Tests", () => {
     it("Should allow any user to exit and transfer tokens to owner", async function () {
-      const {Bond, RootHarvester, owner, users} = await setup();
+      const {Token, RootHarvester, owner, users} = await setup();
       const value = "1000000000000000000000";
 
-      expect(await Bond.balanceOf(RootHarvester.address))
+      expect(await Token.balanceOf(RootHarvester.address))
         .to.equal("0");
 
       await expect(users[0].RootHarvester.withdrawOnRoot("0x3805550f000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000"))
         .to.emit(RootHarvester, "WithdrawOnRoot").withArgs(users[0].address);
 
       // transfer some funds manually to the Harvester
-      const beforeBalance = await Bond.balanceOf(owner.address);
-      await owner.Bond.transfer(RootHarvester.address, value).then((tx: { wait: () => any; }) => tx.wait());
+      const beforeBalance = await Token.balanceOf(owner.address);
+      await owner.Token.transfer(RootHarvester.address, value).then((tx: { wait: () => any; }) => tx.wait());
 
-      expect(await Bond.balanceOf(RootHarvester.address))
+      expect(await Token.balanceOf(RootHarvester.address))
         .to.equal(value);
 
-      await expect(users[0].RootHarvester.transferToOwner(Bond.address))
+      await expect(users[0].RootHarvester.transferToOwner(Token.address))
         .to.emit(RootHarvester, "TransferToOwner")
-        .withArgs(users[0].address, owner.address, Bond.address, value)
-        .to.emit(Bond, "Transfer")
+        .withArgs(users[0].address, owner.address, Token.address, value)
+        .to.emit(Token, "Transfer")
         .withArgs(RootHarvester.address, owner.address, value);
 
-      expect(await Bond.balanceOf(RootHarvester.address))
+      expect(await Token.balanceOf(RootHarvester.address))
         .to.equal("0");
 
-      expect(await Bond.balanceOf(owner.address))
+      expect(await Token.balanceOf(owner.address))
         .to.equal(beforeBalance);
     });
 
     it("Should allow any user to withdrawAndTransferToOwner", async function () {
-      const {Bond, RootHarvester, owner, users} = await setup();
+      const {Token, RootHarvester, owner, users} = await setup();
       const value = "1000000000000000000000";
 
       // transfer some funds manually to the Harvester
-      const beforeBalance = await Bond.balanceOf(owner.address);
-      await owner.Bond.transfer(RootHarvester.address, value).then((tx: { wait: () => any; }) => tx.wait());
+      const beforeBalance = await Token.balanceOf(owner.address);
+      await owner.Token.transfer(RootHarvester.address, value).then((tx: { wait: () => any; }) => tx.wait());
 
-      expect(await Bond.balanceOf(RootHarvester.address))
+      expect(await Token.balanceOf(RootHarvester.address))
         .to.equal(value);
 
       await expect(users[0].RootHarvester.withdrawAndTransferToOwner(
         "0x3805550f000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000",
-        Bond.address
+        Token.address
       ))
         .to.emit(RootHarvester, "WithdrawOnRoot").withArgs(users[0].address)
         .to.emit(RootHarvester, "TransferToOwner")
-        .withArgs(users[0].address, owner.address, Bond.address, value)
-        .to.emit(Bond, "Transfer")
+        .withArgs(users[0].address, owner.address, Token.address, value)
+        .to.emit(Token, "Transfer")
         .withArgs(RootHarvester.address, owner.address, value);
 
-      expect(await Bond.balanceOf(RootHarvester.address))
+      expect(await Token.balanceOf(RootHarvester.address))
         .to.equal("0");
 
-      expect(await Bond.balanceOf(owner.address))
+      expect(await Token.balanceOf(owner.address))
         .to.equal(beforeBalance);
     });
   });
 
   describe("Failing Child Function on Root Chain Tests", () => {
     it("Should fail calling child only functions on root chain", async function () {
-      const {Bond, users} = await setup();
+      const {Token, users} = await setup();
 
-      await expect(users[0].RootHarvester.withdrawOnChild(Bond.address)).to.be.revertedWith(
+      await expect(users[0].RootHarvester.withdrawOnChild(Token.address)).to.be.revertedWith(
         "Harvester: should only be called on child chain"
       );
 
-      await expect(users[0].RootHarvester.withdrawOnChild(Bond.address)).to.be.revertedWith(
+      await expect(users[0].RootHarvester.withdrawOnChild(Token.address)).to.be.revertedWith(
         "Harvester: should only be called on child chain"
       );
 
-      await expect(users[0].RootHarvester.claimAndWithdrawOnChild(Bond.address)).to.be.revertedWith(
+      await expect(users[0].RootHarvester.claimAndWithdrawOnChild(Token.address)).to.be.revertedWith(
         "Harvester: should only be called on child chain"
       );
     });
@@ -157,9 +157,9 @@ describe("Harvester Root Chain Tests", () => {
 describe("Child Chain Tests", () => {
   describe("Initialization Tests", () => {
     it("Deployment should succeed and sane options should be set", async function () {
-      const {Bond, ChildHarvester, owner} = await setup();
+      const {Token, ChildHarvester, owner} = await setup();
 
-      expect(await Bond.balanceOf(ChildHarvester.address))
+      expect(await Token.balanceOf(ChildHarvester.address))
         .to.equal("0");
 
       expect(await ChildHarvester.owner()).to.be.equal(owner.address);

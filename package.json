@@ -1,5 +1,5 @@
 {
-  "name": "BarnBridge-Polygon",
+  "name": "UniverseXYZ-Polygon",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -27,7 +27,7 @@
     "hardhat-deploy": "^0.8.9",
     "mocha": "^8.4.0",
     "prettier": "^2.3.0",
-    "solc-0.8.6": "npm:solc@^0.8.6",
+    "solc-0.8.6": "npm:solc@0.8.6",
     "solidity-coverage": "^0.7.16",
     "solidity-docgen": "^0.5.13",
     "ts-node": "^9.1.1",
