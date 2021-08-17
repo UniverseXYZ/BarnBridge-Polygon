@@ -6,4 +6,4 @@ import "./exit-bond-on-goerli";
 import "./send-multi-to-goerli";
 import "./tunnel-transfer-from-goerli";
 import "./token-harvester";
-import "./transfer-fees-mainnet";
+import "./l1-exit-and-transfer";
