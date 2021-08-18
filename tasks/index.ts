@@ -7,3 +7,4 @@ import "./send-multi-to-goerli";
 import "./tunnel-transfer-from-goerli";
 import "./token-harvester";
 import "./l1-exit-and-transfer";
+import "./l2-withdraw";

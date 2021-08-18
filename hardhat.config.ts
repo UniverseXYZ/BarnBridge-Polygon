@@ -70,7 +70,7 @@ const config: HardhatUserConfig = {
       url: node_url("mainnet"),
       accounts: accounts("mainnet"),
       gas: "auto",
-      gasPrice: "auto",
+      gasPrice: 43000000000,
       gasMultiplier: 1.5
     },
     matic: {
